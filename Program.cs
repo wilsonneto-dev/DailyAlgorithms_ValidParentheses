@@ -40,3 +40,40 @@ static class SolutionV1
         return stack.Count == 0;
     }
 }
+
+static class SolutionV2
+{
+    public static bool IsValid(string s)
+    {
+        var stack = new Stack<char>();
+        Dictionary<char, char> charPairsDictionary = new Dictionary<char, char>()
+        {
+            { ')', '(' },
+            { ']', '[' },
+            { '}', '{' }
+        };
+        char[] startingChars = new[] { '(', '{', '[' };
+        char[] endingChars = new[] { '(', '{', '[' };
+        foreach (char c in s)
+        {
+            if (c == '(' || c == '{' || c == '[')
+            {
+                stack.Push(c);
+                continue;
+            }
+            if (c == ')' || c == '}' || c == ']')
+            {
+                if (stack.Count == 0)
+                    return false;
+                char lastOpenChar = stack.Pop();
+                if (
+                    (c == ')' && lastOpenChar != '(')
+                    || (c == '}' && lastOpenChar != '{')
+                    || (c == ']' && lastOpenChar != '[')
+                )
+                    return false;
+            }
+        }
+        return stack.Count == 0;
+    }
+}
