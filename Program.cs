@@ -5,10 +5,10 @@ var str2 = "()[]{}";
 var str3 = "()[}";
 var str4 = "()}()";
 
-Console.WriteLine(SolutionV1.IsValid(str) ? "ok" : "x");
-Console.WriteLine(SolutionV1.IsValid(str2) ? "ok" : "x");
-Console.WriteLine((!SolutionV1.IsValid(str3)) ? "ok" : "x");
-Console.WriteLine((!SolutionV1.IsValid(str4)) ? "ok" : "x");
+Console.WriteLine(SolutionV2.IsValid(str) ? "ok" : "x");
+Console.WriteLine(SolutionV2.IsValid(str2) ? "ok" : "x");
+Console.WriteLine((!SolutionV2.IsValid(str3)) ? "ok" : "x");
+Console.WriteLine((!SolutionV2.IsValid(str4)) ? "ok" : "x");
 
 static class SolutionV1
 {
@@ -46,33 +46,17 @@ static class SolutionV2
     public static bool IsValid(string s)
     {
         var stack = new Stack<char>();
-        Dictionary<char, char> charPairsDictionary = new Dictionary<char, char>()
-        {
-            { ')', '(' },
-            { ']', '[' },
-            { '}', '{' }
-        };
-        char[] startingChars = new[] { '(', '{', '[' };
-        char[] endingChars = new[] { '(', '{', '[' };
+        Dictionary<char, char> charPairsDictionary = new Dictionary<char, char>() { { ')', '(' }, { ']', '[' }, { '}', '{' } };
         foreach (char c in s)
         {
-            if (c == '(' || c == '{' || c == '[')
+            if (!charPairsDictionary.ContainsKey(c))
             {
                 stack.Push(c);
                 continue;
             }
-            if (c == ')' || c == '}' || c == ']')
-            {
-                if (stack.Count == 0)
-                    return false;
-                char lastOpenChar = stack.Pop();
-                if (
-                    (c == ')' && lastOpenChar != '(')
-                    || (c == '}' && lastOpenChar != '{')
-                    || (c == ']' && lastOpenChar != '[')
-                )
-                    return false;
-            }
+
+            if (stack.Count == 0 || charPairsDictionary[c] != stack.Pop())
+                return false;
         }
         return stack.Count == 0;
     }
